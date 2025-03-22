@@ -11,8 +11,8 @@ setup(
     url="https://github.com/Leoauro/xtransformer",  # 项目主页
     packages=find_packages(),  # 自动查找包
     install_requires=[
-        "torch~=2.6.0+cu124"
-        "setuptools~=70.2.0"
+        "torch>=2.6.0",
+        "setuptools>=70.2.0",
     ],  # 依赖列表
     classifiers=[
         "Programming Language :: Python :: 3",
