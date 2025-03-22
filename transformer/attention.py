@@ -23,7 +23,13 @@ class Attention(nn.Module):
         attention_weight = (q @ k.transpose(-2, -1)) / (q.size(-1) ** 0.5)
 
         # 掩码计算
+        # 行掩码
+        # mask shape (batch_size,1,1,seq_len)
+        # 行掩码和列掩码都需要进行，以确保填充位置不会影响有效位置的注意力权重
         mask = mask.unsqueeze(-2).unsqueeze(-2)
+        # mask shape (batch_size,1,seq_len,seq_len)
+        #  mask.transpose(-2, -1) 表示列掩码
+        mask = mask * mask.transpose(-2, -1)
         if have_causal_mask:
             causal_mask = torch.ones([q.size(2), k.size(2)]).to(k.device)
 
@@ -34,7 +40,7 @@ class Attention(nn.Module):
             mask = mask * causal_mask
 
         # 进行掩码覆盖
-        attention_weight.masked_fill_(mask == 0, -float('inf'))
+        attention_weight.masked_fill_(mask == 1, -float('inf'))
 
         # 归一化
         # attention_weight shape(batch_size,head_num, seq_len,seq_len)
