@@ -29,7 +29,7 @@ class Attention(nn.Module):
         mask = mask.unsqueeze(-2).unsqueeze(-2)
         # mask shape (batch_size,1,seq_len,seq_len)
         #  mask.transpose(-2, -1) 表示列掩码
-        mask = mask * mask.transpose(-2, -1)
+        mask = torch.where(mask == 1, mask, mask.transpose(-2, -1))
         if have_causal_mask:
             causal_mask = torch.ones([q.size(2), k.size(2)]).to(k.device)
 
