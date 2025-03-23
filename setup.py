@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="xtransformer",  # 包名
-    version="0.2.0",  # 版本号
+    version="0.3.0",  # 版本号
     author="Leoauro Xie",  # 作者
     author_email="xzcfly@qq.com",  # 作者邮箱
     description="transformer 实现，支持 decoder_only 和 encoder_only以及完整的transformer",  # 简短描述

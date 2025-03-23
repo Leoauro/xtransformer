@@ -34,7 +34,7 @@ class Attention(nn.Module):
             causal_mask = torch.ones([q.size(2), k.size(2)]).to(k.device)
 
             # causal_mask shape (1,1, seq_len,seq_len)
-            causal_mask = torch.tril(causal_mask).unsqueeze(0).unsqueeze(0)
+            causal_mask = torch.triu(causal_mask, diagonal=1).unsqueeze(0).unsqueeze(0)
 
             # mask shape (batch_size,1 seq_len,seq_len)
             mask = mask * causal_mask
