@@ -27,9 +27,10 @@ class Attention(nn.Module):
         # mask shape (batch_size,1,1,seq_len)
         # 行掩码和列掩码都需要进行，以确保填充位置不会影响有效位置的注意力权重
         mask = mask.unsqueeze(-2).unsqueeze(-2)
-        # mask shape (batch_size,1,seq_len,seq_len)
-        #  mask.transpose(-2, -1) 表示列掩码
-        mask = torch.where(mask == 1, mask, mask.transpose(-2, -1))
+
+        # 此处注意，不要做列掩码， 如果做列掩码，会导致全行都为 -inf，
+        # softmax计算后的值出现nan
+        # mask = torch.where(mask == 1, mask, mask.transpose(-2, -1))
         if have_causal_mask:
             causal_mask = torch.ones([q.size(2), k.size(2)]).to(k.device)
 
@@ -37,14 +38,14 @@ class Attention(nn.Module):
             causal_mask = torch.triu(causal_mask, diagonal=1).unsqueeze(0).unsqueeze(0)
 
             # mask shape (batch_size,1 seq_len,seq_len)
-            mask = torch.where(mask == 1, mask, causal_mask)
+            mask = torch.where(causal_mask == 1, causal_mask, mask)
 
         # 进行掩码覆盖
         attention_weight.masked_fill_(mask == 1, -float('inf'))
 
         # 归一化
         # attention_weight shape(batch_size,head_num, seq_len,seq_len)
-        attention_weight = safe_softmax(attention_weight)
+        attention_weight = torch.softmax(attention_weight, dim=-1)
 
         # 计算注意力分数 attention_score shape(batch_size, head_num,seq_len, hidden_dim/head_num )
         attention_score = attention_weight @ v
@@ -59,12 +60,3 @@ class Attention(nn.Module):
         attention_score = self.attention_score_w(attention_score)
 
         return attention_score
-
-
-def safe_softmax(logits: Tensor) -> Tensor:
-    # 将全掩码行的Logits设为0
-    all_masked_rows = (logits == -float('inf')).all(dim=-1, keepdim=True)
-    logits = torch.where(all_masked_rows, torch.zeros_like(logits), logits)
-    # 计算Softmax
-    probs = torch.softmax(logits, dim=-1)
-    return probs
