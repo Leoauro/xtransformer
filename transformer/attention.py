@@ -44,7 +44,7 @@ class Attention(nn.Module):
 
         # 归一化
         # attention_weight shape(batch_size,head_num, seq_len,seq_len)
-        attention_weight = torch.softmax(attention_weight, dim=-1)
+        attention_weight = safe_softmax(attention_weight)
 
         # 计算注意力分数 attention_score shape(batch_size, head_num,seq_len, hidden_dim/head_num )
         attention_score = attention_weight @ v
@@ -59,3 +59,12 @@ class Attention(nn.Module):
         attention_score = self.attention_score_w(attention_score)
 
         return attention_score
+
+
+def safe_softmax(logits: Tensor) -> Tensor:
+    # 将全掩码行的Logits设为0
+    all_masked_rows = (logits == -float('inf')).all(dim=-1, keepdim=True)
+    logits = torch.where(all_masked_rows, torch.zeros_like(logits), logits)
+    # 计算Softmax
+    probs = torch.softmax(logits, dim=-1)
+    return probs
