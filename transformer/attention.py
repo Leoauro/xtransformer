@@ -37,7 +37,7 @@ class Attention(nn.Module):
             causal_mask = torch.triu(causal_mask, diagonal=1).unsqueeze(0).unsqueeze(0)
 
             # mask shape (batch_size,1 seq_len,seq_len)
-            mask = mask * causal_mask
+            mask = torch.where(mask == 1, mask, causal_mask)
 
         # 进行掩码覆盖
         attention_weight.masked_fill_(mask == 1, -float('inf'))
