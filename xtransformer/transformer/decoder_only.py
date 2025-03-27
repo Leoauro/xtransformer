@@ -1,9 +1,9 @@
 from torch import nn, Tensor
 
-from transformer.add_norm import AddNorm
-from transformer.attention import Attention
-from transformer.config import AttentionConfig
-from transformer.feed_forward import FeedForward
+from xtransformer.transformer.add_norm import AddNorm
+from xtransformer.transformer.attention import Attention
+from xtransformer.transformer.config import AttentionConfig
+from xtransformer.transformer.feed_forward import FeedForward
 
 
 class DecoderOnlyBlock(nn.Module):
@@ -29,7 +29,7 @@ class DecoderOnlyBlock(nn.Module):
         attention_score = self.attention_block(q, k, v, mask, have_causal_mask=True)
         attention_score = self.add_norm1(input_x, attention_score)
 
-        ff_attention_score = self.ff(attention_score)
+        ff_attention_score, _ = self.ff(attention_score)
         attention_score = self.add_norm2(attention_score, ff_attention_score)
 
         return attention_score

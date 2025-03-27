@@ -1,10 +1,10 @@
 import torch
 from torch import nn, Tensor
 
-from transformer.add_norm import AddNorm
-from transformer.attention import Attention
-from transformer.config import AttentionConfig
-from transformer.feed_forward import FeedForward
+from xtransformer.transformer.add_norm import AddNorm
+from xtransformer.transformer.attention import Attention
+from xtransformer.transformer.config import AttentionConfig
+from xtransformer.transformer.feed_forward import FeedForward
 
 
 class TransformerDecoderBlock(torch.nn.Module):
@@ -51,7 +51,7 @@ class TransformerDecoderBlock(torch.nn.Module):
 
         cross_attention = self.add_norm2(attention_score, cross_attention)
 
-        ff_cross_attention = self.ff(cross_attention)
+        ff_cross_attention, _ = self.ff(cross_attention)
 
         ff_cross_attention = self.add_norm3(cross_attention, ff_cross_attention)
 

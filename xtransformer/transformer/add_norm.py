@@ -1,6 +1,6 @@
 from torch import Tensor, nn
 
-from transformer.config import AttentionConfig
+from xtransformer.transformer.config import AttentionConfig
 
 
 class AddNorm(nn.Module):

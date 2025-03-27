@@ -1,19 +1,19 @@
 import torch
 
-from embedding.config import EmbeddingConfig
-from embedding.embedding import Embedding
-from transformer.config import AttentionConfig
-from transformer.decoder_only import DecoderOnly
-from transformer.encoder_only import EncoderOnly
-from transformer.transformer import Transformer
+from xtransformer.embedding import Embedding
+from xtransformer.embedding import EmbeddingConfig
+from xtransformer.transformer import DecoderOnly
+from xtransformer.transformer import EncoderOnly
+from xtransformer.transformer.config import AttentionConfig
+from xtransformer.transformer.transformer import Transformer
 
 if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     input_x = torch.tensor([[100, 256, 244, 88, 98, 555, 658, 1, 1, 1]]).to(device)
-    input_mask = torch.tensor([[1, 1, 1, 1, 1, 1, 1, 0, 0, 0]]).to(device)
+    input_mask = torch.tensor([[0, 0, 0, 0, 0, 0, 0, 1, 1, 1]]).to(device)
 
     target_x = torch.tensor([[89, 33, 556, 43, 89, 213, 1, 1]]).to(device)
-    target_mask = torch.tensor([[1, 1, 1, 1, 1, 1, 0, 0]]).to(device)
+    target_mask = torch.tensor([[0, 0, 0, 0, 0, 0, 1, 1]]).to(device)
 
     attention_cfg = AttentionConfig()
     emb_cfg = EmbeddingConfig()

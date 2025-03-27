@@ -1,9 +1,9 @@
 import torch
 from torch import nn, Tensor
 
-from transformer.config import AttentionConfig
-from transformer.encoder_only import EncoderOnly
-from transformer.transformer_decoder import TransformerDecoder
+from xtransformer.transformer.config import AttentionConfig
+from xtransformer.transformer.encoder_only import EncoderOnly
+from xtransformer.transformer.transformer_decoder import TransformerDecoder
 
 
 class Transformer(nn.Module):

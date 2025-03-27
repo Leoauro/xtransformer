@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 
-from embedding.config import EmbeddingConfig
+from xtransformer.embedding.config import EmbeddingConfig
 
 
 class Embedding(nn.Module):

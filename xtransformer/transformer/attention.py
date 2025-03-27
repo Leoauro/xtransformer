@@ -1,7 +1,7 @@
 import torch
 from torch import nn, Tensor
 
-from transformer.config import AttentionConfig
+from xtransformer.transformer.config import AttentionConfig
 
 
 class Attention(nn.Module):
