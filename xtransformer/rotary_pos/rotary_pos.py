@@ -41,6 +41,7 @@ class RotaryPos(nn.Module):
 def apply_seq_pos(x: torch.Tensor, *, pos: int = None) -> torch.Tensor:
     rope = RotaryPos()
     sin_matrix, cos_matrix = rope(x.size(-1), seq_len=x.size(-2), cur_pos=pos)
+    sin_matrix, cos_matrix = sin_matrix.to(device=x.device), cos_matrix.to(device=x.device)
     even = [
         i for i in range(0, x.size(-1), 2)
     ]
